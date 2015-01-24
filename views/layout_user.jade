@@ -1,0 +1,122 @@
+doctype html
+html
+  head
+    meta(charset="UTF-8")
+    title BitAlert
+    meta(content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no", name="viewport")
+    link(href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css", rel="stylesheet", type="text/css")
+    link(href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css", rel="stylesheet", type="text/css")
+    // Ionicons
+    link(href="//code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css", rel="stylesheet", type="text/css")
+    // Theme style
+    link(href="css/AdminLTE.css", rel="stylesheet", type="text/css")
+
+  body.skin-blue
+    // header logo: style can be found in header.less
+    header.header
+      a.logo(href="index.html")
+        // Add the class icon to your logo image or logo icon to add the margining
+        | BitAlert
+      // Header Navbar: style can be found in header.less
+      nav.navbar.navbar-static-top(role="navigation")
+        // Sidebar toggle button
+        a.navbar-btn.sidebar-toggle(href="#", data-toggle="offcanvas", role="button")
+          span.sr-only Toggle navigation
+          span.icon-bar
+          span.icon-bar
+          span.icon-bar
+        .navbar-right(style="padding-right: 1em")
+          ul.nav.navbar-nav
+            // Notifications: style can be found in dropdown.less
+            li.dropdown.notifications-menu
+              a.dropdown-toggle(href="#", data-toggle="dropdown")
+                i.fa.fa-warning
+                span.label.label-warning 10
+              ul.dropdown-menu
+                li.header You have 10 notifications
+                li
+                  // inner menu: contains the actual data
+                  ul.menu
+                    li
+                      a(href="#")
+                        i.ion.ion-ios7-people.info
+                        | 5 new members joined today
+                    li
+                      a(href="#")
+                        i.fa.fa-warning.danger
+                        | Very long description here that may not fit into the page and may cause design problems
+                    li
+                      a(href="#")
+                        i.fa.fa-users.warning
+                        | 5 new members joined
+                    li
+                      a(href="#")
+                        i.ion.ion-ios7-cart.success
+                        | 25 sales made
+                    li
+                      a(href="#")
+                        i.ion.ion-ios7-person.danger
+                        | You changed your username
+                li.footer
+                  a(href="#") View all
+
+    .wrapper.row-offcanvas.row-offcanvas-left
+      // Left side column. contains the logo and sidebar
+      aside.left-side.sidebar-offcanvas
+        // sidebar: style can be found in sidebar.less
+        section.sidebar
+          // Sidebar user panel
+          .user-panel
+            .pull-left.image
+              img.img-circle(src="img/avatar3.png", alt="User Image")
+            .pull-left.info
+              p Hello, Tim
+              a(href="#")
+                i.fa.fa-circle.text-success
+                | Online
+
+          // sidebar menu: : style can be found in sidebar.less
+          ul.sidebar-menu
+            li.active
+              a(href="index.html")
+                i.fa.fa-dashboard
+                span Dashboard
+            li.treeview
+              a(href="#")
+                i.fa.fa-btc
+                span Manage Tracking
+                i.fa.fa-angle-left.pull-right
+              ul.treeview-menu
+                li
+                  a(href="#")
+                    i.fa.fa-angle-double-right
+                    | Single Address
+                li
+                  a(href="#")
+                    i.fa.fa-angle-double-right
+                    | Xpub
+            li
+              a(href="#")
+                i.fa.fa-bell
+                span Manage Alerts
+      block content
+        aside.right-side
+          section.content-header
+            h1
+              | Layout
+              small Layout Subtitle
+            ol.breadcrumb
+              li
+                a(href="#")
+                  i.fa.fa-dashboard
+                  | Home
+              li.active Blank page
+
+        
+      
+    
+    // ./wrapper
+    // jQuery 2.0.2
+    script(src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js")
+    script(src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js", type="text/javascript")
+    script(src="js/AdminLTE/app.js", type="text/javascript")

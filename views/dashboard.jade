@@ -1,0 +1,41 @@
+extends ./layout_user.jade
+
+block content
+  // Right side column. Contains the navbar and content of the page
+  aside.right-side
+    // Content Header (Page header)
+    section.content-header
+      h1
+        | Dashboard
+        small Overview of all your addresses
+    // Main content
+    section.content
+      .row
+        .col-lg-9
+        .col-lg-3
+          .col-lg-12.col-xs-12
+            .small-box.bg-yellow
+              .inner
+                h3=data.balance/100
+                  
+                p Bits Balance
+              .icon
+                i.fa.fa-btc
+              a.small-box-footer(href="#")
+                | More info
+                i.fa.fa-arrow-circle-right
+          .col-lg-12.col-xs-12
+            .small-box.bg-green
+              .inner
+                h3 25
+                  
+                p Number of Transactions
+              .icon
+                i.fa.fa-btc
+              a.small-box-footer(href="#")
+                | More info
+                i.fa.fa-arrow-circle-right
+          
+
+    // /.content
+  // /.right-side
