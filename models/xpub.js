@@ -91,6 +91,7 @@ xpubSchema.methods.fillUntil = function(type, user, callback) {
                addr.user = user.id;
                addr.xpub = xpubInsta.id;
                addr.xpubtype = parseInt(type);
+               addr.label = xpubInsta.label;
                addr.save(function(err) {
                   if (err) {return callback(err)}
                   console.log('Saved addr: ' + addr.toString())

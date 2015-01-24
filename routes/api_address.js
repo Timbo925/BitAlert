@@ -49,7 +49,11 @@ router.get('/', function(req,res) {
    if (!req.isAuthenticated()) {res.json(401, {status: 'error', message: 'Not Authenticated'})}
    Address.find({user:req.user.id}, function(err,addrList) {
       if (err) {return res.json(500, err)}
-      return res.json(200,{status: 'success', data: addrList})
+      var balance = 0;
+      for (var i = 0; i < addrList.length; i++) {
+         balance = balance + addrList[i].balanceSat
+      }
+      return res.json(200,{status: 'success', data: {balance: balance, addr: addrList}})
    })
 })
 
