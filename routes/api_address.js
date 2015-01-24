@@ -45,6 +45,21 @@ router.post('/xpub/next/:xpubId', function(req, res) {
    })
 })
 
+router.get('/', function(req,res) {
+   if (!req.isAuthenticated()) {res.json(401, {status: 'error', message: 'Not Authenticated'})}
+   Address.find({user:req.user.id}, function(err,addrList) {
+      if (err) {return res.json(500, err)}
+      return res.json(200,{status: 'success', data: addrList})
+   })
+})
+
+router.get('/balance' ,function(req,res) {
+   if (!req.isAuthenticated()) {res.json(401, {status: 'error', message: 'Not Authenticated'})}
+   Address.getBalance(req.user, function(err, balance) {
+      if(err) {return res.json(500, {status: 'error', message: "Problem getting balance"})}
+      return res.json(200, {status: 'success', data: {balance: balance}})
+   })
+})
 
 
 
