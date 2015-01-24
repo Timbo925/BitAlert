@@ -61,6 +61,21 @@ router.get('/balance' ,function(req,res) {
    })
 })
 
+router.post('/', function(req,res) {
+   if (!req.isAuthenticated()) {res.json(401, {status: 'error', message: 'Not Authenticated'})}
+   if(req.body.addrStr) {
+      var addr = new Address();
+      addr.addressStr = req.body.addrStr
+      addr.user = req.user.id
+      if(req.body.label) {addr.label = req.body.label}
+      addr.updateBalance(function(err, edited) {
+         res.json(200, {message: 'success', data:{addr: addr}})
+      })
+   } else {
+      return res.json(500,"No addrStr given")
+   }
+})
+
 
 
 
