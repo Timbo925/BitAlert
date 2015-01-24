@@ -1,0 +1,115 @@
+var mongoose = require('mongoose')
+var Schema = mongoose.Schema;
+var bitcore = require('bitcore');
+var request = require('request');
+var async = require('async');
+var Address = require('../models/address')
+
+var xpubSchema = new Schema({
+     xpub: String,
+     user: {type: Schema.Types.ObjectId, ref: 'User'},
+     label: String,
+     depth_internal: {type: Number, default: 0},
+     depth_external: {type:Number, default: 0}
+});
+
+
+xpubSchema.statics.getXpubBalances = function(xpub,from,to, type ,callback) {
+   var pubKey = bitcore.HDPublicKey(xpub)
+   console.log('PubKey: ' + pubKey)
+   var keys = [];
+   for(var i = from; i < to; i++) {
+      var publicKey = pubKey.derive(type).derive(i).toObject().publicKey;
+      var addressStr = bitcore.PublicKey(publicKey).toAddress().toString();
+      keys.push(addressStr);
+   }
+
+   console.log(keys)
+
+   var responsemessage = {
+      xpub: pubKey.toString(),
+      from: from,
+      to: to,
+      type: type,
+      addr: []}
+
+   async.eachSeries(keys,
+      function(key, callback) {
+         request('https://insight.bitpay.com/api/addr/' + key,
+         function(error, response, body) {
+            if (!error && response.statusCode == 200) {
+               var ret = JSON.parse(body);
+               var address = new Object();
+               address.addressStr = ret.addrStr;
+               address.balanceSat = ret.balanceSat;
+               responsemessage.addr.push(address);
+               callback();
+            }
+            else {
+               callback(error)
+            }
+         }
+      )
+   }, function(err) {
+      if(err) {return callback(err)}
+      else {
+         return callback(null, responsemessage)
+      }
+      }
+   )
+}
+
+xpubSchema.methods.fillBothUntil = function(user, callback) {
+   var xpubInsta = this;
+   xpubInsta.fillUntil(0,user,function(err){
+      if (err) {return callback(err)}
+      xpubInsta.fillUntil(1,user,function(err) {
+         if (err) {return callback(err)}
+         return callback(null)
+      })
+   })
+}
+
+xpubSchema.methods.fillUntil = function(type, user, callback) {
+   var xpubInsta = this;
+   if (parseInt(type) == 1) {depth = "depth_internal"} else {depth = "depth_external"}
+   stop = false;
+   async.until(
+      function () {return stop == true},
+      function(callback) {
+         var pubKey = bitcore.HDPublicKey(xpubInsta.xpub)
+         var publicKey = pubKey.derive(parseInt(type)).derive(xpubInsta[depth]).toObject().publicKey;
+         var addressStr = bitcore.PublicKey(publicKey).toAddress().toString();
+         request('https://insight.bitpay.com/api/addr/' + addressStr, function(error, response, body) {
+            if (!error && response.statusCode == 200) {
+               var ret = JSON.parse(body);
+               console.log(ret)
+               if (ret.txApperances == 0) {stop = true}
+               addr = new Address();
+               addr.addressStr = ret.addrStr;
+               addr.balanceSat = ret.balanceSat;
+               addr.user = user.id;
+               addr.xpub = xpubInsta.id;
+               addr.xpubtype = parseInt(type);
+               addr.save(function(err) {
+                  if (err) {return callback(err)}
+                  console.log('Saved addr: ' + addr.toString())
+                  xpubInsta[depth]++; //increase the depth of the added values
+                  callback();
+               })
+            }
+            else {
+               callback(error)
+            }
+      })},
+      function(err) {
+         if (err) {return callback(err)};
+         xpubInsta.save(function (err) {
+            if(err) {return callback(err)}
+            return callback(null)
+         })
+      }
+   )
+}
+
+module.exports = mongoose.model('Xpub', xpubSchema);
