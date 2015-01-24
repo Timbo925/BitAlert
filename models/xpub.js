@@ -77,32 +77,22 @@ xpubSchema.methods.fillUntil = function(type, user, callback) {
    async.until(
       function () {return stop == true},
       function(callback) {
+
          var pubKey = bitcore.HDPublicKey(xpubInsta.xpub)
          var publicKey = pubKey.derive(parseInt(type)).derive(xpubInsta[depth]).toObject().publicKey;
          var addressStr = bitcore.PublicKey(publicKey).toAddress().toString();
-         request('https://insight.bitpay.com/api/addr/' + addressStr, function(error, response, body) {
-            if (!error && response.statusCode == 200) {
-               var ret = JSON.parse(body);
-               console.log(ret)
-               if (ret.txApperances == 0) {stop = true}
-               addr = new Address();
-               addr.addressStr = ret.addrStr;
-               addr.balanceSat = ret.balanceSat;
-               addr.user = user.id;
-               addr.xpub = xpubInsta.id;
-               addr.xpubtype = parseInt(type);
-               addr.label = xpubInsta.label;
-               addr.save(function(err) {
-                  if (err) {return callback(err)}
-                  console.log('Saved addr: ' + addr.toString())
-                  xpubInsta[depth]++; //increase the depth of the added values
-                  callback();
-               })
-            }
-            else {
-               callback(error)
-            }
-      })},
+         addr = new Address();
+         addr.addressStr = addressStr;
+         addr.user = user.id;
+         addr.xpub = xpubInsta.id;
+         addr.xpubtype = parseInt(type);
+         addr.label = xpubInsta.label;
+         addr.updateAddress(function(err) {
+           if (addr.txApperances == 0) {stop = true}
+           xpubInsta[depth]++; //increase the depth of the added values
+           callback();
+         })
+      },
       function(err) {
          if (err) {return callback(err)};
          xpubInsta.save(function (err) {

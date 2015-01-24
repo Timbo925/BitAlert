@@ -8,7 +8,11 @@ var request = require('request')
      user: {type: Schema.Types.ObjectId, ref: 'User'},
      label: String,
      xpub: {type: Schema.Types.ObjectId, ref: 'Xpub'},
-     xpubtype : {type: Number}
+     xpubtype : {type: Number},
+     txApperances: Number,
+     totalSentSat: Number,
+     totalReceivedSat: Number,
+     updated: {type: Date, default: Date.now, require: true}
 });
 
 addressScheme.statics.getBalance = function (user, callback) {
@@ -22,7 +26,7 @@ addressScheme.statics.getBalance = function (user, callback) {
    })
 }
 
-addressScheme.methods.updateBalance = function(callback) {
+addressScheme.methods.updateAddress = function(callback) {
    var addr = this;
    request('https://insight.bitpay.com/api/addr/' + addr.addressStr,
       function(error, response, body) {
@@ -31,6 +35,9 @@ addressScheme.methods.updateBalance = function(callback) {
             res = true
             if(addr.balanceSat == ret.balanceSat) {res = false}
             addr.balanceSat = ret.balanceSat;
+            addr.txApperances = ret.txApperances;
+            addr.totalSentSat = ret.totalSentSat;
+            addr.totalReceivedSat = addr.totalReceivedSat;
             addr.save(function(err) {
                callback(null, res, addr)
             })
@@ -38,5 +45,11 @@ addressScheme.methods.updateBalance = function(callback) {
       }
    )
 }
+
+addressScheme.pre('save', function(next){
+  now = new Date();
+  this.updated_at = now;
+  next();
+});
 
 module.exports = mongoose.model('Address', addressScheme);

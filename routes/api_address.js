@@ -72,7 +72,7 @@ router.post('/', function(req,res) {
       addr.addressStr = req.body.addrStr
       addr.user = req.user.id
       if(req.body.label) {addr.label = req.body.label}
-      addr.updateBalance(function(err, edited) {
+      addr.updateAddress(function(err, edited) {
          res.json(200, {message: 'success', data:{addr: addr}})
       })
    } else {
