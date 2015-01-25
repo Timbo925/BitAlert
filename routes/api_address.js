@@ -47,7 +47,7 @@ router.post('/xpub/next/:xpubId', function(req, res) {
 
 router.get('/', function(req,res) {
    if (!req.isAuthenticated()) {res.json(401, {status: 'error', message: 'Not Authenticated'})}
-   Address.find({user:req.user.id}, function(err,addrList) {
+   Address.Base.find({user:req.user.id}, function(err,addrList) {
       if (err) {return res.json(500, err)}
       var balance = 0;
       for (var i = 0; i < addrList.length; i++) {
@@ -59,7 +59,7 @@ router.get('/', function(req,res) {
 
 router.get('/balance' ,function(req,res) {
    if (!req.isAuthenticated()) {res.json(401, {status: 'error', message: 'Not Authenticated'})}
-   Address.getBalance(req.user, function(err, balance) {
+   Address.Base.getBalance(req.user, function(err, balance) {
       if(err) {return res.json(500, {status: 'error', message: "Problem getting balance"})}
       return res.json(200, {status: 'success', data: {balance: balance}})
    })
@@ -68,7 +68,7 @@ router.get('/balance' ,function(req,res) {
 router.post('/', function(req,res) {
    if (!req.isAuthenticated()) {res.json(401, {status: 'error', message: 'Not Authenticated'})}
    if(req.body.addrStr) {
-      var addr = new Address();
+      var addr = new Address.Single();
       addr.addressStr = req.body.addrStr
       addr.user = req.user.id
       if(req.body.label) {addr.label = req.body.label}

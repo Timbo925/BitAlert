@@ -20,7 +20,7 @@ xpubSchema.statics.getUserXpub = function (user, callback) {
       if (err) {return callback(err)}
       var xpubList = []
       async.eachSeries(xpubs, function(key, callback) {
-        Address
+        Address.Xpub
         .find({user:user.id, xpub:key.id})
         .exec(function(err, addrs) {
           var balance = 0;
@@ -105,7 +105,7 @@ xpubSchema.methods.fillUntil = function(type, user, callback) {
          var pubKey = bitcore.HDPublicKey(xpubInsta.xpub)
          var publicKey = pubKey.derive(parseInt(type)).derive(xpubInsta[depth]).toObject().publicKey;
          var addressStr = bitcore.PublicKey(publicKey).toAddress().toString();
-         addr = new Address();
+         addr = new Address.Xpub();
          addr.addressStr = addressStr;
          addr.user = user.id;
          addr.xpub = xpubInsta.id;

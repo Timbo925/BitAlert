@@ -11,7 +11,7 @@ router.get('/', function(req, res) {
 router.get('/dashboard', function(req, res) {
   //TODO CHECK autentication
 
-  Address.find({user:req.user.id}, function(err,addrList) {
+  Address.Base.find({user:req.user.id}, function(err,addrList) {
      if (err) {return res.render('error', {error: err})}
      var balance = 0;
      var txApperances = 0
@@ -30,7 +30,7 @@ router.get('/dashboard', function(req, res) {
 router.get('/manage', function(req, res) {
   //TODO CHECK autentication
 
-  Address.find({user:req.user.id, xpub:undefined}, function(err,addrSingles) {
+  Address.Base.find({user:req.user.id, xpub:undefined}, function(err,addrSingles) {
      if (err) {return res.render('error', {error: err})}
 
      Xpub.getUserXpub(req.user,function(err, xpubList) {
