@@ -13,6 +13,30 @@ var xpubSchema = new Schema({
      depth_external: {type:Number, default: 0}
 });
 
+xpubSchema.statics.getUserXpub = function (user, callback) {
+  this
+    .find({user:user.id})
+    .exec(function(err, xpubs) {
+      if (err) {return callback(err)}
+      var xpubList = []
+      async.eachSeries(xpubs, function(key, callback) {
+        Address
+        .find({user:user.id, xpub:key.id})
+        .exec(function(err, addrs) {
+          var balance = 0;
+          for(var i=0; i<addrs.length; i++) {
+            balance += addrs[i].balanceSat;
+          }
+          xpubList.push({xpub: key, balanceSat: balance})
+          callback();
+        })
+      },function(err) {
+        console.log(xpubList)
+        callback(null, xpubList)
+      }
+      )
+    })
+}
 
 xpubSchema.statics.getXpubBalances = function(xpub,from,to, type ,callback) {
    var pubKey = bitcore.HDPublicKey(xpub)

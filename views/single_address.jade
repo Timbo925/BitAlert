@@ -1,0 +1,80 @@
+extends ./layout_user.jade
+
+block content
+  // Right side column. Contains the navbar and content of the page
+  aside.right-side
+    // Content Header (Page header)
+    section.content-header
+      h1
+        | Address Management
+        small Manage your bitcoin addresses
+    // Main content
+    section.content
+      .row
+        .col-md-12
+          .box
+            .box-header
+              h3.box-title Single Address Overview
+              .box-tools.pull-right
+                button.btn.btn-default.btn-xs(data-widget="collapse")
+                  i.fa.fa-minus
+                button.btn.btn-default.btn-xs(data-widget="remove")
+                  i.fa.fa-times
+
+            .box-body.table-responsive(style="overflow: inherit")
+              #single_wrapper.dataTables_wrapper.form-online(role="grid")
+                table#single.table.table-bordered.table-sriped.dataTable
+                  thead
+                    tr
+                      th Address
+                      th Bits Balance
+                      th Label
+                      th Tools
+                  tbody
+                    - console.log('Here')
+                    - console.log(data)
+                    each addr in data.addrSingles
+                      tr
+                        td=addr.addressStr
+                        td=addr.balanceSat/100
+                        td=addr.label
+                        td 
+                          btn.btn.btn-xs.btn-danger.removeSingle(data-remove = addr.id)
+                            i.fa.fa-remove            
+          //.box            
+        .col-md-12
+          .box
+            .box-header
+              h3.box-title Xpub Overview
+              .box-tools.pull-right
+                button.btn.btn-default.btn-xs(data-widget="collapse")
+                  i.fa.fa-minus
+                button.btn.btn-default.btn-xs(data-widget="remove")
+                  i.fa.fa-times
+            .box-body.table-responsive(style="overflow: inherit")
+              #xpub_wrapper.dataTables_wrapper.form-online(role="grid")
+                table#xpub.table.table-bordered.table-sriped.dataTable
+                  thead
+                    tr
+                      th(rowspan="1", colspan="1") Label
+                      th(rowspan="1", colspan="1") Balance
+                      th(rowspan="1", colspan="1") Tools
+                  tbody
+                    each item in data.xpubList
+                      tr
+                        td=item.xpub.label
+                        td=item.balanceSat
+                        td 
+                          btn.btn.btn-xs.btn-danger.removeXpub(data-remove = item.xpub.id)
+                            i.fa.fa-remove
+    // /.content
+  // /.right-side
+  
+block scripts
+  script(src="/js/plugins/datatables/jquery.dataTables.js", type="text/javascript")
+  script(src="/js/plugins/datatables/dataTables.bootstrap.js", type="text/javascript")
+  script(type="text/javascript").
+    $(function() {
+      $('#single').dataTable();
+      $('#xpub').dataTable();
+    });

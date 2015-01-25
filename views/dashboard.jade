@@ -11,13 +11,36 @@ block content
     // Main content
     section.content
       .row
-        .col-lg-9
+        .col-lg-3.col-lg-push-9.col-sm-12
+          .col-lg-12.col-sm-6
+            .small-box.bg-yellow
+              .inner
+                h3=data.balance/100
+                  
+                p Bits Balance
+              .icon
+                i.fa.fa-btc
+              a.small-box-footer(href="#")
+                | More info
+                i.fa.fa-arrow-circle-right
+          .col-lg-12.col-sm-6
+            .small-box.bg-green
+              .inner
+                h3=data.txApperances
+                  
+                p Number of Transactions
+              .icon
+                i.fa.fa-btc
+              a.small-box-footer(href="#")
+                | More info
+                i.fa.fa-arrow-circle-right
+        .col-lg-9.col-lg-pull-3.col-sm-12
           .box
             .box-header
               h3.box-title Address Overview
             // /.box-header
             .box-body.table-responsive
-              #example1_wrapper.dataTables_wrapper.form-inline(role="grid")
+              #example1_wrapper.dataTables_wrapper.form-inline(role="grid", style="overflow: hidden")
                 table#example1.table.table-bordered.table-striped.dataTable(aria-describedby="example1_info")
                   thead
                     tr(role="row")
@@ -39,31 +62,6 @@ block content
                         td=addr.label
                         td=addr.updated
             // /.box-body
-
-
-        .col-lg-3
-          .col-lg-12.col-xs-12
-            .small-box.bg-yellow
-              .inner
-                h3=data.balance/100
-                  
-                p Bits Balance
-              .icon
-                i.fa.fa-btc
-              a.small-box-footer(href="#")
-                | More info
-                i.fa.fa-arrow-circle-right
-          .col-lg-12.col-xs-12
-            .small-box.bg-green
-              .inner
-                h3=data.txApperances
-                  
-                p Number of Transactions
-              .icon
-                i.fa.fa-btc
-              a.small-box-footer(href="#")
-                | More info
-                i.fa.fa-arrow-circle-right
           
 
     // /.content

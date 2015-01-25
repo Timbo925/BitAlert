@@ -10,6 +10,8 @@ html
     link(href="//code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css", rel="stylesheet", type="text/css")
     // Theme style
     link(href="css/AdminLTE.css", rel="stylesheet", type="text/css")
+    link(href="../../css/datatables/dataTables.bootstrap.css", rel="stylesheet", type="text/css")
+
 
   body.skin-blue
     // header logo: style can be found in header.less
@@ -78,23 +80,13 @@ html
           // sidebar menu: : style can be found in sidebar.less
           ul.sidebar-menu
             li.active
-              a(href="index.html")
+              a(href="/dashboard")
                 i.fa.fa-dashboard
                 span Dashboard
-            li.treeview
-              a(href="#")
+            li
+              a(href="/manage")
                 i.fa.fa-btc
                 span Manage Tracking
-                i.fa.fa-angle-left.pull-right
-              ul.treeview-menu
-                li
-                  a(href="#")
-                    i.fa.fa-angle-double-right
-                    | Single Address
-                li
-                  a(href="#")
-                    i.fa.fa-angle-double-right
-                    | Xpub
             li
               a(href="#")
                 i.fa.fa-bell
