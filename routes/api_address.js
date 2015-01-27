@@ -47,19 +47,15 @@ router.post('/xpub/next/:xpubId', function(req, res) {
 
 router.get('/', function(req,res) {
    if (!req.isAuthenticated()) {res.json(401, {status: 'error', message: 'Not Authenticated'})}
-   Address.Base.find({user:req.user.id}, function(err,addrList) {
+   Address.Base.getAllBalance(req.user, function(err,balance, addrList) {
       if (err) {return res.json(500, err)}
-      var balance = 0;
-      for (var i = 0; i < addrList.length; i++) {
-         balance = balance + addrList[i].balanceSat
-      }
-      return res.json(200,{status: 'success', data: {balance: balance, addr: addrList}})
+      res.json(200,{status: 'success', data: {balance: balance, addr: addrList}})
    })
 })
 
 router.get('/balance' ,function(req,res) {
    if (!req.isAuthenticated()) {res.json(401, {status: 'error', message: 'Not Authenticated'})}
-   Address.Base.getBalance(req.user, function(err, balance) {
+   Address.Base.getAllBalance(req.user, function(err, balance) {
       if(err) {return res.json(500, {status: 'error', message: "Problem getting balance"})}
       return res.json(200, {status: 'success', data: {balance: balance}})
    })
@@ -72,8 +68,9 @@ router.post('/', function(req,res) {
       addr.addressStr = req.body.addrStr
       addr.user = req.user.id
       if(req.body.label) {addr.label = req.body.label}
-      addr.updateAddress(function(err, edited) {
-         res.json(200, {message: 'success', data:{addr: addr}})
+      addr.save(function(err) {
+        if(err) {res.json(500, err)}
+        res.json(200, {message: 'success', data:{addr: addr}})
       })
    } else {
       return res.json(500,"No addrStr given")

@@ -1,12 +1,14 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
+var Address = require('../models/address')
 
  var userSchema = new Schema({
      username: {type:String, require: true},
      firstname: String,
      lastname: String,
      password: String,
-     email: String
+     email: String,
+     stats : {type: Schema.Types.ObjectId, ref: 'Stats', required: true}
 });
 
 
@@ -25,6 +27,8 @@ userSchema.statics.free = function(options, callback) {
       else return callback(null, true)
    })
 }
+
+
 
 //edit field from the current user. Not existing values won't be saved by mongoose
 userSchema.methods.edit = function(options, callback) {

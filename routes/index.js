@@ -11,32 +11,22 @@ router.get('/', function(req, res) {
 router.get('/dashboard', function(req, res) {
   //TODO CHECK autentication
 
-  Address.Base.find({user:req.user.id}, function(err,addrList) {
+  Address.Base.getAllBalance(req.user, function(err,data) {
      if (err) {return res.render('error', {error: err})}
-     var balance = 0;
-     var txApperances = 0
-     for (var i = 0; i < addrList.length; i++) {
-        balance = balance + addrList[i].balanceSat
-        txApperances += addrList[i].txApperances
-     }
      res.render('dashboard', { title: 'BitAlert Dashbaord',
-                               data:
-                                {balance:balance,
-                                 txApperances: txApperances,
-                                 addr: addrList}});
+                               data: data});
   })
 });
 
 router.get('/manage', function(req, res) {
   //TODO CHECK autentication
 
-  Address.Base.find({user:req.user.id, xpub:undefined}, function(err,addrSingles) {
+  Address.Single.getAllBalance(req.user, function(err,data) {
      if (err) {return res.render('error', {error: err})}
-
      Xpub.getUserXpub(req.user,function(err, xpubList) {
        res.render('single_address', { title: 'BitAlert Dashbaord',
                                  data:
-                                  {addrSingles:addrSingles,
+                                  {addrSingles:data.addr,
                                    xpubList:xpubList}});
      })
   })

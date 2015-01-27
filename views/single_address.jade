@@ -57,13 +57,13 @@ block content
                   thead
                     tr
                       th(rowspan="1", colspan="1") Label
-                      th(rowspan="1", colspan="1") Balance
+                      th(rowspan="1", colspan="1") Bit Balance
                       th(rowspan="1", colspan="1") Tools
                   tbody
                     each item in data.xpubList
                       tr
                         td=item.xpub.label
-                        td=item.balanceSat
+                        td=item.balanceSat/100
                         td 
                           btn.btn.btn-xs.btn-danger.removeXpub(data-remove = item.xpub.id)
                             i.fa.fa-remove

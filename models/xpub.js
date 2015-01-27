@@ -23,12 +23,12 @@ xpubSchema.statics.getUserXpub = function (user, callback) {
         Address.Xpub
         .find({user:user.id, xpub:key.id})
         .exec(function(err, addrs) {
-          var balance = 0;
-          for(var i=0; i<addrs.length; i++) {
-            balance += addrs[i].balanceSat;
-          }
-          xpubList.push({xpub: key, balanceSat: balance})
-          callback();
+          Address.Base.getBalanceList(addrs, function(err, data) {
+            if (err) {callback(err)}
+            data.xpub = key;
+            xpubList.push(data)
+            callback();
+          })
         })
       },function(err) {
         console.log(xpubList)
@@ -101,7 +101,6 @@ xpubSchema.methods.fillUntil = function(type, user, callback) {
    async.until(
       function () {return stop == true},
       function(callback) {
-
          var pubKey = bitcore.HDPublicKey(xpubInsta.xpub)
          var publicKey = pubKey.derive(parseInt(type)).derive(xpubInsta[depth]).toObject().publicKey;
          var addressStr = bitcore.PublicKey(publicKey).toAddress().toString();
@@ -111,7 +110,7 @@ xpubSchema.methods.fillUntil = function(type, user, callback) {
          addr.xpub = xpubInsta.id;
          addr.xpubtype = parseInt(type);
          addr.label = xpubInsta.label;
-         addr.updateAddress(function(err) {
+         addr.save(function(err) {
            if (addr.txApperances == 0) {stop = true}
            xpubInsta[depth]++; //increase the depth of the added values
            callback();
