@@ -1,0 +1,37 @@
+mixin AddSingle()
+  .box.box-success
+    .box-header
+      h3.box-title Add Single Address
+    form#singleForm
+      .box-body
+        .form-group
+          .input-group
+            span.input-group-addon
+              i.fa.fa-btc
+            input.form-control(type="text", placeholder="Bitcoin Address", name='addrStr')
+        .form-group
+          .input-group
+            span.input-group-addon
+              i.fa.fa-tag
+            input.form-control(type="text", placeholder="Label Text", name='label')
+      .box-footer
+        button.btn.btn-default.btn-block(type="submit") Submit
+        
+
+script(type="text/javascript").
+  $('#singleForm').submit(function(event) {
+    event.preventDefault();
+    var form = $(event.target);
+    $.ajax({
+      method: 'POST',
+      url: '/api/address',
+      data: form.serializeArray(),
+      success: function(res) {
+        console.log(res)
+        location.reload()
+      },
+      error: function(err) {
+        console.log(err)
+      }
+    })
+  });

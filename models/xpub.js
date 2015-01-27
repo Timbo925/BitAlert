@@ -31,7 +31,7 @@ xpubSchema.statics.getUserXpub = function (user, callback) {
           })
         })
       },function(err) {
-        console.log(xpubList)
+        //console.log(xpubList)
         callback(null, xpubList)
       }
       )

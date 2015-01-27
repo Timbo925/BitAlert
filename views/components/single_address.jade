@@ -1,0 +1,31 @@
+mixin singleAddress(list)
+  .box.box-success
+    .box-header
+      h3.box-title Single Address Overview
+      .box-tools
+        .pull-right    
+          button.btn.btn-default.btn-xs(data-widget="collapse")
+            i.fa.fa-minus
+          button.btn.btn-default.btn-xs(data-widget="remove")
+            i.fa.fa-times
+    .box-body
+      .table-responsive(style="overflow: inherit")
+        #single_wrapper.dataTables_wrapper.form-online(role="grid")
+          table#single.table.table-bordered.table-sriped.dataTable
+            thead
+              tr
+                th Address
+                th Bits Balance
+                th Label
+                th Tools
+            tbody
+              - console.log('Here')
+              - console.log(data)
+              each addr in list
+                tr
+                  td=addr.addressStr
+                  td=addr.balanceSat/100
+                  td=addr.label
+                  td 
+                    btn.btn.btn-xs.btn-danger.removeSingle(data-remove = addr.id)
+                      i.fa.fa-remove

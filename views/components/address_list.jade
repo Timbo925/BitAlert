@@ -1,0 +1,27 @@
+mixin addressList(list)
+  .box
+    .box-header
+      h3.box-title Address Overview
+    // /.box-header
+    .box-body.table-responsive
+      #example1_wrapper.dataTables_wrapper.form-inline(role="grid", style="overflow: hidden")
+        table#example1.table.table-bordered.table-striped.dataTable(aria-describedby="example1_info")
+          thead
+            tr(role="row")
+              th.sorting_asc(role="columnheader", tabindex="0", aria-controls="example1", rowspan="1", colspan="1", aria-sort="ascending", aria-label="Rendering engine: activate to sort column descending") Address
+              th.sorting(role="columnheader", tabindex="0", aria-controls="example1", rowspan="1", colspan="1", aria-label="Browser: activate to sort column ascending") Bits Balance
+                th.sorting(role="columnheader", tabindex="0", aria-controls="example1", rowspan="1", colspan="1", aria-label="Platform(s): activate to sort column ascending") Label
+              th.sorting(role="columnheader", tabindex="0", aria-controls="example1", rowspan="1", colspan="1", aria-label="Platform(s): activate to sort column ascending") Last Transaction
+          tfoot
+            tr
+              th(rowspan="1", colspan="1") Address
+              th(rowspan="1", colspan="1") Bits Balance
+              th(rowspan="1", colspan="1") Label
+              th(rowspan="1", colspan="1") Last Transaction
+          tbody(role="alert", aria-live="polite", aria-relevant="all")
+            each addr in list
+              tr.odd
+                td=addr.addressStr
+                td=addr.balanceSat/100
+                td=addr.label
+                td=addr.updated

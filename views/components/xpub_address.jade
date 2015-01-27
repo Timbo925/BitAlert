@@ -1,0 +1,27 @@
+mixin xpubAddress(list)
+  .box.box-warning
+    .box-header
+      h3.box-title Xpub Overview
+      .box-tools.pull-right
+        button.btn.btn-default.btn-xs(data-widget="collapse")
+          i.fa.fa-minus
+        button.btn.btn-default.btn-xs(data-widget="remove")
+          i.fa.fa-times
+    .box-body.table-responsive(style="overflow: inherit")
+      #xpub_wrapper.dataTables_wrapper.form-online(role="grid")
+        table#xpub.table.table-bordered.table-sriped.dataTable
+          thead
+            tr
+              th(rowspan="1", colspan="1") Label
+              th(rowspan="1", colspan="1") Bit Balance
+              th(rowspan="1", colspan="1") Tools
+          tbody
+            each item in list
+              tr
+                td=item.xpub.label
+                td=item.balanceSat/100
+                td 
+                  btn.btn.btn-xs.btn-danger.removeXpub(data-remove = item.xpub.id)
+                    i.fa.fa-remove
+
+                      

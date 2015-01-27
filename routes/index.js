@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var Address = require('../models/address')
 var Xpub = require('../models/xpub')
+var passport = require('passport');
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -31,4 +32,14 @@ router.get('/manage', function(req, res) {
      })
   })
 });
+
+router.post('/login', passport.authenticate('local'),
+  function(req,res) {
+    res.redirect('dashboard')
+  })
+
+router.get('/login', function(rq,res) {
+  res.render('login')
+})
+
 module.exports = router;

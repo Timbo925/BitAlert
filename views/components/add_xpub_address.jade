@@ -1,0 +1,36 @@
+mixin AddXpub()
+  .box.box-warning
+    .box-header
+      h3.box-title Add Xpub Address
+    form#xpubForm
+      .box-body
+        .form-group
+          .input-group
+            span.input-group-addon
+              i.fa.fa-btc
+            input.form-control(type="text", placeholder="Bitcoin Address", name='xpub')
+        .form-group
+          .input-group
+            span.input-group-addon
+              i.fa.fa-tag
+            input.form-control(type="text", placeholder="Label Text", name='label')
+      .box-footer
+        button.btn.btn-default.btn-block(type="submit") Submit
+        
+
+script(type="text/javascript").
+  $('#xpubForm').submit(function(event) {
+    event.preventDefault();
+    var form = $(event.target);
+    $.ajax({
+      method: 'POST',
+      url: '/api/xpub/add',
+      data: form.serializeArray(),
+      success: function(res) {
+        location.reload()
+      },
+      error: function(err) {
+        console.log(err)
+      }
+    })
+  });
