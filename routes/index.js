@@ -1,7 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var Address = require('../models/address')
-var Xpub = require('../models/xpub')
 var passport = require('passport');
 
 /* GET home page. */

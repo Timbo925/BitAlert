@@ -1,13 +1,14 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
-var Source = require('../models/source')
+var Address = require('../models/address')
 
  var userSchema = new Schema({
      username: {type:String, require: true},
      firstname: String,
      lastname: String,
      password: String,
-     email: String
+     email: String,
+     stats : {type: Schema.Types.ObjectId, ref: 'Stats', required: true}
 });
 
 

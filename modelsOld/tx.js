@@ -3,6 +3,7 @@ var Schema = mongoose.Schema;
 var bitcore = require('bitcore');
 var request = require('request');
 var async = require('async');
+var Address = require('../models/address')
 
 var txSchema = new Schema({
      txid: {type:String, required: true},
