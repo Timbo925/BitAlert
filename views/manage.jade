@@ -13,9 +13,11 @@ block content
     section.content
       .row
         .col-md-12
-          +singleAddress(data.addrSingles)           
+          +accounts(accounts)
         .col-md-12
-          +xpubAddress(data.xpubList)
+        //  +singleAddress(data.addrSingles)           
+        .col-md-12
+        //  +xpubAddress(data.xpubList)
         .col-md-6
           +AddSingle()
         .col-md-6
@@ -30,8 +32,10 @@ block scripts
   include ./components/xpub_address.jade
   include ./components/add_single_address.jade
   include ./components/add_xpub_address.jade
+  include ./components/accounts.jade
   script(type="text/javascript").
     $(function() {
       $('#single').dataTable();
       $('#xpub').dataTable();
+      $('#accounts').dataTable();
     });

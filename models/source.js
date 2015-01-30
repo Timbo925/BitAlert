@@ -5,6 +5,9 @@ var util = require('util');
 var async = require('async')
 var Tx = require('../models/tx');
 var Address = require('../models/address');
+var rf = require('../models/router_functions')
+var bitcore = require('bitcore');
+var Account = require('../models/account')
 
 function sourceSchema() {
    Schema.apply(this, arguments)
@@ -33,9 +36,6 @@ var SingleSchema = new sourceSchema();
 var XpubSchema = new sourceSchema();
 var GreenSchema = new sourceSchema();
 
-
-//MORE SPECIFICATION FOR EVENT MODEL
-
 ////////////////
 //// SINGLE ////
 ////////////////
@@ -45,40 +45,25 @@ SingleSchema.add({
 })
 
 //Create address from source
-SingleSchema.methods.ini = function(user, callback) {
-  var address = new Address()
-  address.address = this.address;
-  address.user =  user.id;
-  address.source = this.id;
-  address.save(function(err) {
-    if (err) {callback(err)};
-    callback(null)
-  })
-}
-
-//Update single balance and SAVES it
-SingleSchema.methods.updateBalance = function(callback) {
+SingleSchema.methods.ini = function(user, cb) {
   var single = this;
-  var url = "http://btc.blockr.io/api/v1/address/info/"
-  url += this.address
-  url +="?confirmations=0"
-  request(url,
-    function(err, res, body) {
-      if (!err && res.statusCode == 200) {
-        var json = JSON.parse(body);
-        if(single.balanceSat == json.data.balance*10e8) {
-          callback(null, false)
-        } else {
-          single.balanceSat = json.data.balance*10e8;
-          single.save(function(err) {
-            if (err) {callback(err)}
-            callback(null, true)
-          })
-        }
-      } else {
-        callback(err)
-      }
+  var address = new Address()
+  address.address = single.address;
+  address.user =  user.id;
+  address.source = single.id;
+  rf.getAddresses([address.address], 0, function(err, json) {
+    address.balanceSat = json.data.balance*1e8;
+    single.balanceSat = json.data.balance*1e8;
+    Account.addSource(single, function(err) {
+      address.save(function(err) {
+        if (err) {return cb(err)}
+        single.save(function(err) {
+          if (err) {return cb(err)}
+          cb();
+        })
+      })
     })
+  })
 }
 
 
@@ -91,6 +76,18 @@ XpubSchema.add({
   depth_internal: {type: Number, default: 0},
   depth_external: {type: Number, default: 0}
 })
+
+XpubSchema.methods.ini = function(user, callback) {
+  var xpub = this;
+  Account.addSource(xpub, function(err) {
+    if (err) {callback(err)}
+    xpub.fillBothUntil(user, function(err) {
+      if (err) {callback(err)} //TODO remove all possible addresses linked to source
+      callback(null)
+    })
+
+  })
+}
 
 XpubSchema.methods.fillBothUntil = function(user, callback) {
    var xpubInsta = this;
@@ -117,11 +114,17 @@ XpubSchema.methods.fillUntil = function(type, user, callback) {
          addr.address = addressStr;
          addr.user = user.id;
          addr.source = xpubInsta.id;
-         addr.save(function(err) {
- //TODO TXAPPERANCES WILL NOT WORK
-           if (addr.txApperances == 0) {stop = true}
-           xpubInsta[depth]++; //increase the depth of the added values
-           callback();
+         rf.getAddresses([addr.address], 0, function(err, data) {
+           if (err) {return callback(err)}
+           addr.balanceSat = data.data.balance*1e8
+           xpubInsta.balanceSat += data.data.balance*1e8; //update source balance
+           xpubInsta[depth]++
+           console.log('NB_TXS: ' + data.data.nb_txs)
+           if(data.data.nb_txs == 0) {stop = true} // Stop when we reached depth where no texts are found
+           addr.save(function(err) {
+             if (err) {callback(err)}
+             callback();
+           })
          })
       },
       function(err) {

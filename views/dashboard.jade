@@ -15,8 +15,7 @@ block content
           .col-lg-12.col-sm-6
             .small-box.bg-yellow
               .inner
-                h3=data.balance*1e6
-                  
+                h3=data.balanceSat/100
                 p Bits Balance
               .icon
                 i.fa.fa-btc
@@ -35,7 +34,7 @@ block content
                 | More info
                 i.fa.fa-arrow-circle-right
         .col-lg-9.col-lg-pull-3.col-sm-12
-          +addressList(data.addr)
+          +addressList(data.list)
           
 
     // /.content

@@ -16,12 +16,12 @@ mixin addressList(list)
             tr
               th(rowspan="1", colspan="1") Address
               th(rowspan="1", colspan="1") Bits Balance
-              th(rowspan="1", colspan="1") Label
+              th(rowspan="1", colspan="1") Source
               th(rowspan="1", colspan="1") Last Transaction
           tbody(role="alert", aria-live="polite", aria-relevant="all")
             each addr in list
               tr.odd
-                td=addr.addressStr
+                td=addr.address
                 td=addr.balanceSat/100
-                td=addr.label
+                td=addr.source.label
                 td=addr.updated

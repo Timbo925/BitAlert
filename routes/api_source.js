@@ -3,48 +3,33 @@ var router = express.Router();
 var passport = require('passport');
 var Account = require('../models/account')
 var Source = require('../models/source')
-
+var help = require('../models/router_functions')
 //ROOT= api/source
 
-function isAuthenticatedApi(req, res, next) {
-  if(!req.isAuthenticated()) {res.json(401, "Not Autehnticated")}
-  else {
-    next();
-  }
-}
 
-function hasValuesBody(list) {
-  return function(req,res,next) {
-    for(var i=0; i < list.length; i++) {
-      if (!req.body[list[i]]) {
-        res.json(500, 'Some parameters not filled in: ' + list)
-        }
-    }
-    next();
-  }
-}
+////////////////
+//// SINGLE ////
+////////////////
 
 //Create new account
-router.post('/single', isAuthenticatedApi
-  ,hasValuesBody(["label", "account", "address"])
+router.post('/single', help.isAuthenticatedApi
+  ,help.hasValuesBody(["label", "account", "address"])
   ,function(req, res) {
   var single = new Source.Single();
   single.address = req.body.address
   single.label = req.body.label
   single.account = req.body.account
   single.user = req.user.id;
-  single.save(function(err) {
-    if (err) {res.json(500,err)}
-    single.ini(req.user, function(err) { //Generates all addresses belonging to source
-      if (err) {res.json(500,err)}
-      single.updateBalance(function(err) { //Updating balance of source
-        if (err) {res.json(500,err)}
-        res.json(200, single)
-      })
-    })
+  single.ini(req.user, function(err) {
+    if(err) {res.json(500, err)}
+    res.json(200, single)
   })
 })
 
+//Get all Sources
+router.get('/', help.isAuthenticatedApi, getSource(Source.Base))
+router.get('/single', help.isAuthenticatedApi, getSource(Source.Single))
+router.get('/xpub', help.isAuthenticatedApi, getSource(Source.Xpub))
 function getSource(model) {
   return function(req, res, next) {
     model
@@ -56,9 +41,22 @@ function getSource(model) {
   }
 }
 
-//Get all Sources
-router.get('/', isAuthenticatedApi, getSource(Source.Base))
-router.get('/single', isAuthenticatedApi, getSource(Source.Single))
-router.get('/xpub', isAuthenticatedApi, getSource(Source.Xpub))
+////////////////
+///// XPUB /////
+////////////////
+
+router.post('/xpub', help.isAuthenticatedApi,
+  help.hasValuesBody(["label", "xpubString", "account"]),
+  function(req, res) {
+    var xpub = new Source.Xpub()
+    xpub.xpubString = req.body.xpubString;
+    xpub.account = req.body.account;
+    xpub.label = req.body.label;
+    xpub.user = req.user.id;
+    xpub.ini(req.user, function(err) {
+      if (err) {return res.json(500,err)} //TODO remove all possible addresses linked to source
+      res.json(200, xpub)
+    })
+})
 
 module.exports = router
