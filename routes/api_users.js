@@ -9,11 +9,11 @@ router.post('/create', function(req, res) {
    console.log(req.body)
     if(req.body.username && req.body.password) {
         var user = new User;
-        var stats = new Stats;
+        //var stats = new Stats;
         user.username = req.body.username.trim();
         user.password = req.body.password;
         user.email = req.body.email;
-        user.stats = stats;
+        //user.stats = stats;
         user.save(function (err) {
             if (err) {res.json(500, err)}
         })

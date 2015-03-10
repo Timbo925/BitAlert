@@ -15,15 +15,15 @@ var help = require('../models/router_functions')
 router.post('/single', help.isAuthenticatedApi
   ,help.hasValuesBody(["label", "account", "address"])
   ,function(req, res) {
-  var single = new Source.Single();
-  single.address = req.body.address
-  single.label = req.body.label
-  single.account = req.body.account
-  single.user = req.user.id;
-  single.ini(req.user, function(err) {
-    if(err) {res.json(500, err)}
-    res.json(200, single)
-  })
+     var single = new Source.Single();
+     single.address = req.body.address
+     single.label = req.body.label
+     single.account = req.body.account
+     single.user = req.user.id;
+     single.ini(req.user, function(err) {
+       if(err) {res.json(500, err)}
+       res.json(200, single)
+     })
 })
 
 //Get all Sources

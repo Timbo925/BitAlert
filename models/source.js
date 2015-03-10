@@ -7,7 +7,7 @@ var Tx = require('../models/tx');
 var Address = require('../models/address');
 var rf = require('../models/router_functions')
 var bitcore = require('bitcore');
-var Account = require('../models/account')
+var Account = require('../models/account');
 
 function sourceSchema() {
    Schema.apply(this, arguments)
@@ -48,6 +48,7 @@ SingleSchema.add({
 SingleSchema.methods.ini = function(user, cb) {
   var single = this;
   var address = new Address()
+  var Account = require('../models/account');
   address.address = single.address;
   address.user =  user.id;
   address.source = single.id;

@@ -51,7 +51,8 @@ app.use('/api/user', require('./routes/api_users'));
 app.use('/api/address', require('./routes/api_address'));
 app.use('/api/account', require('./routes/api_account'));
 app.use('/api/source', require('./routes/api_source'))
-/// catch 404 and forward to error handler
+
+// catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
