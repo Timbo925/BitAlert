@@ -29,9 +29,9 @@ router.get('/all', help.isAuthenticatedApi, function(req, res) {
   })
 })
 
-router.post('/balance', help.isAuthenticatedApi, help.hasValuesBody(['account']), function(req, res) {
+router.get('/balance', help.isAuthenticatedApi, function(req, res) {
    Account
-   .findOne({'_id': req.body.account})
+   .findOne({'_id': req.query.account})
    .populate('sources')
    .exec(function(err, account) {
       if (err) {return res.json(500,err)}
